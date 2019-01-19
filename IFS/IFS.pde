@@ -1,6 +1,4 @@
-PVector p;
-
-float weight[] = {
+float w[] = {
   0.33, 0.05
 };
 
@@ -24,17 +22,10 @@ void setup() {
   size(1024, 1024);
   blendMode(ADD);
   colorMode(HSB, 360, 100, 100, 100);
-  
-  strokeWeight(1.);
-  exec();
+  pattern(floor(random(1, 4)));
 }
 
 void draw() {}
-
-void exec() {
-  background(0);
-  pattern(floor(random(1, 4)));
-}
 
 void pattern(int gNum) {
   background(2, 9, 12);
@@ -46,7 +37,7 @@ void pattern(int gNum) {
     for (int yi = 0; yi < gNum; yi++) {
       pushMatrix();
       translate(gw * (float(xi) + 0.5), gh * (float(yi) + 0.5));
-      drawShape(gw*.1);
+      drawShape(gw);
       popMatrix();
     }
   }
@@ -55,115 +46,97 @@ void pattern(int gNum) {
 void drawShape(float size) {
   
   randamize();
-  p = new PVector();
   
-  stroke(random(180, 360), 80, 100, 50);
+  stroke(random(180, 240), 80, 80, 50);
   
-  float coin;
-  PVector tp = new PVector();
+  float coin = 0.;
+  PVector p = new PVector(0, 0);
   
-  for (int i = 0; i < 200000; i++) {
+  for (int i = 0; i < 200000; i++) {  
     coin = random(1.0);
-    if (coin < weight[0]) tp = variation(affin(p, pa[0]), pv[0]);
-    else if (coin < weight[0] + weight[1]) tp = variation(affin(p, pa[1]), pv[1]);
-    else tp = variation(affin(p, pa[2]), pv[2]);
-    
-    point(tp.x * size * 2., tp.y * size * 2.);
-    p = tp;
+    if (coin < w[0]) p = variation(affin(p, pa[0]), pv[0]);
+    else if (coin < w[0] + w[1]) p = variation(affin(p, pa[1]), pv[1]);
+    else p = variation(affin(p, pa[2]), pv[2]);
+    point(p.x * size, p.y * size);
   }
 }
 
-PVector affin(PVector _p, float[] pas) {
-  PVector p_ = new PVector();
-  p_.x = pas[0]*_p.x + pas[1]*_p.y + pas[2];
-  p_.y = pas[3]*_p.x + pas[4]*_p.y + pas[5];
-  return p_;
+PVector affin(PVector p, float[] pas) {
+  float x = pas[0]* p.x + pas[1]* p.y + pas[2];
+  float y = pas[3]* p.x + pas[4]* p.y + pas[5];
+  p.x = x;
+  p.y = y;
+  return p;
 }
 
-PVector variation(PVector _p, float[] pvs) {
-  PVector p_ = v1(_p).mult(pvs[0]);
-  if(vFlags[1]) p_.add( v2(_p).mult(pvs[1]) );
-  if(vFlags[2]) p_.add( v3(_p).mult(pvs[2]) );
-  if(vFlags[3]) p_.add( v4(_p).mult(pvs[3]) );
-  if(vFlags[4]) p_.add( v5(_p).mult(pvs[4]) );
+PVector variation(PVector p, float[] pvs) {
+  PVector cp = p.copy();
+  PVector p_ = new PVector(0, 0);
+  if (pvs[0] > 0) p_.add(v1(cp.copy()).mult(pvs[0]));
+  if (pvs[1] > 0) p_.add(v2(cp.copy()).mult(pvs[1]));
+  if (pvs[2] > 0) p_.add(v3(cp.copy()).mult(pvs[2]));
+  if (pvs[3] > 0) p_.add(v4(cp.copy()).mult(pvs[3]));
+  if (pvs[4] > 0) p_.add(v5(cp.copy()).mult(pvs[4]));
   return p_;
 }
 
 // Linear
-PVector v1(PVector _p) {
-  PVector p_ = _p.copy();
-  return p_;
+PVector v1(PVector p) {
+  return p;
 }
 
 // Spherical
-PVector v2(PVector _p) {
-  PVector p_ = _p.copy();
-  
-  float r2 = _p.x * _p.x + _p.y * _p.y;
-  
-  p_.x = _p.x / r2;
-  p_.y = _p.y / r2;
-  
-  return p_;
+PVector v2(PVector p) {
+  float r2 = p.x * p.x + p.y * p.y;
+  p.div(r2);
+  return p;
 }
 
 // Fisheye
-PVector v3(PVector _p) {
-  
-  PVector p_ = _p.copy();
-  float r2 = _p.x * _p.x + _p.y * _p.y;
+PVector v3(PVector p) {
+  float r2 = p.x * p.x + p.y * p.y;
   float r = pow(r2, 0.5);
-  
-  p_ = _p.mult(2.0 / (r + 1));
-  
-  return p_;
+  p.mult(2.0 / (r + 1.));
+  return p;
 }
 
 // Tangent
-PVector v4(PVector _p) {
-  PVector p_ = new PVector(sin(_p.x)/cos(_p.y), tan(_p.y));
-  return p_;
+PVector v4(PVector p) {
+  p = new PVector(sin(p.x)/cos(p.y), tan(p.y));
+  return p;
 }
 
 // Bubble
-PVector v5(PVector _p) {
-  PVector p_ = _p.copy();
-  float r2 = _p.x * _p.x + _p.y * _p.y;
-  
-  p_ = _p.mult(4.0 / r2 + 4.0);
-  
-  return p_;
+PVector v5(PVector p) {
+  float r2 = p.x * p.x + p.y * p.y;
+  p.mult(4.0 / r2 + 4.0);
+  return p;
 }
 
 void randamize() {
-  
-  weight[0] = random(0.5);
-  weight[1] = random(0.5);
+  w[0] = random(1.);
+  w[1] = random(1. - w[0]);
   
   for (int i = 0; i < 3; i++) {
-    for (int j = 0; j < 6; j++) {
-            
+    for (int j = 0; j < 6; j++) {     
       pa[i][j] = random(2.) - 1.;
-      
-      
     }
   }
   
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 5; j++) {
-      
-      pv[i][j] = random(1.);
+      if (j == 0) {
+        pv[i][j] = random(0.6, .9);
+      } else {
+        pv[i][j] = random(-1., 0.4);
+      }
     }
-  }
-  
-  for (int i = 1; i < 5; i++) {
-    vFlags[i] = random(1.) > .5; 
   }
 }
 
 void keyPressed() {
   if (key == 'r') {
-    pattern(floor(random(1, 6)));
+    pattern(floor(random(1, 4)));
   }
   if (key == 's') {
     saveFrame("capture-######.png");
