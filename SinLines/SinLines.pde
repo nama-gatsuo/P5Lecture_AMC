@@ -23,8 +23,8 @@ void pattern(int gNum) {
       r.clear();
       f.clear();
       for (int ri = 0; ri < 4; ri++) {
-         r.add(random(gw / 2. * 0.1, gw / 2. * 0.98));
-         f.add(float(floor(random(1, 12))));
+        r.add(random(gw / 2. * 0.1, gw / 2. * 0.98));
+        f.add(float(floor(random(1, 12))));
       }
       
       drawShape(r, f);
@@ -38,11 +38,11 @@ void drawShape(ArrayList<Float> r, ArrayList<Float> f) {
   PVector p0 = new PVector(), p1 = new PVector();
   
   for (float t = 0; t < TWO_PI; t += 0.01) {
-      p0.x = r.get(0) * cos(f.get(0) * t + HALF_PI);
-      p0.y = r.get(1) * sin(f.get(1) * t - HALF_PI);
-      p1.x = r.get(2) * cos(f.get(2) * t + HALF_PI);
-      p1.y = r.get(3) * sin(f.get(3) * t - HALF_PI);      
-      line(p0.x, p0.y, p1.x, p1.y);
+    p0.x = r.get(0) * cos(f.get(0) * t + HALF_PI);
+    p0.y = r.get(1) * sin(f.get(1) * t - HALF_PI);
+    p1.x = r.get(2) * cos(f.get(2) * t + HALF_PI);
+    p1.y = r.get(3) * sin(f.get(3) * t - HALF_PI);      
+    line(p0.x, p0.y, p1.x, p1.y);
   }
 }
 
