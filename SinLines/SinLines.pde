@@ -1,9 +1,9 @@
 void setup() {
-  size(1080, 1080);
+  size(1024, 1024);
   blendMode(ADD);
   stroke(32);
   
-  noLoop();
+  pattern(floor(random(1, 6)));
 }
 
 void pattern(int gNum) {
@@ -38,21 +38,19 @@ void drawShape(ArrayList<Float> r, ArrayList<Float> f) {
   PVector p0 = new PVector(), p1 = new PVector();
   
   for (float t = 0; t < TWO_PI; t += 0.01) {
-      p0.x = r.get(0) * cos(f.get(0) * t + HALF_PI + millis());
-      p0.y = r.get(1) * sin(f.get(1) * t - HALF_PI + millis());
-      p1.x = r.get(2) * cos(f.get(2) * t + HALF_PI + millis());
-      p1.y = r.get(3) * sin(f.get(3) * t - HALF_PI + millis());      
+      p0.x = r.get(0) * cos(f.get(0) * t + HALF_PI);
+      p0.y = r.get(1) * sin(f.get(1) * t - HALF_PI);
+      p1.x = r.get(2) * cos(f.get(2) * t + HALF_PI);
+      p1.y = r.get(3) * sin(f.get(3) * t - HALF_PI);      
       line(p0.x, p0.y, p1.x, p1.y);
   }
 }
 
-void draw(){
-  pattern(3);
-}
+void draw(){}
 
 void keyPressed() {
   if (key == 'r') {
-    pattern(floor(random(2, 6)));
+    pattern(floor(random(1, 6)));
   }
   if (key == 's') {
     saveFrame("capture-######.png");

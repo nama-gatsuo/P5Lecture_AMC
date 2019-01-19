@@ -20,7 +20,7 @@ Boolean vFlags[] = { true, false, false, false, false };
 
 void setup() {
   size(1024, 1024);
-  blendMode(ADD);
+  //blendMode(ADD);
   colorMode(HSB, 360, 100, 100, 100);
   pattern(floor(random(1, 4)));
 }
@@ -28,26 +28,30 @@ void setup() {
 void draw() {}
 
 void pattern(int gNum) {
-  background(2, 9, 12);
+  println("start...");
+  
+  float h = random(360);
+  background(h, 4, 99);
   
   float gw = width / gNum;
   float gh = height / gNum;
   
   for (int xi = 0; xi < gNum; xi++) {
     for (int yi = 0; yi < gNum; yi++) {
+      stroke((h + random(-30, 30)) % 360, 100, 70, 10);
+      
       pushMatrix();
       translate(gw * (float(xi) + 0.5), gh * (float(yi) + 0.5));
-      drawShape(gw);
+      drawShape(gw * random(.3, 1.3));
       popMatrix();
     }
   }
+  println("end!");
 }
 
 void drawShape(float size) {
   
   randamize();
-  
-  stroke(random(180, 240), 80, 80, 50);
   
   float coin = 0.;
   PVector p = new PVector(0, 0);
@@ -126,9 +130,9 @@ void randamize() {
   for (int i = 0; i < 3; i++) {
     for (int j = 0; j < 5; j++) {
       if (j == 0) {
-        pv[i][j] = random(0.6, .9);
+        pv[i][j] = random(0.6, .8);
       } else {
-        pv[i][j] = random(-1., 0.4);
+        pv[i][j] = random(-1., 0.5);
       }
     }
   }
