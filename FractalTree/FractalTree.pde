@@ -15,7 +15,7 @@ static final int MAX_BRANCH = 4;
 
 void setup() {
   
-  size(1920, 1920);
+  size(1024, 1024);
   blendMode(ADD);
   
   pattern(3);
@@ -61,7 +61,7 @@ void drawShape(float size) {
 }
 
 void fractalLoop(PVector z0, PVector z1, int level, ArrayList<Branch> branches) {
-  strokeWeight(8. * pow(1. / (level+1), .6));
+  strokeWeight(4. * pow(1. / (level+1), .6));
   line(z0.x, z0.y, z1.x, z1.y);
   if (level == MAX_LEVEL) return;
   for (int i = 0; i < branches.size(); i++) {
